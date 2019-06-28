@@ -2,7 +2,7 @@
 % outline of the wing, rudder and horizontal stabilizer.
 
 %% Wing End 1 file
-basePath = fullfile(fileparts(fileparts(which('OCKModel.slx'))),'CAD');
+basePath = fileparts(fileparts(which(mfilename)));
 
 wingFileName = 'wing1.sldcrv';
 
