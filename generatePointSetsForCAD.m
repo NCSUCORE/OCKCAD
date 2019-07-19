@@ -2,177 +2,248 @@
 % outline of the wing, rudder and horizontal stabilizer.
 
 %% Wing End 1 file
-basePath = fileparts(fileparts(which(mfilename)));
+basePath = fullfile(fileparts(fileparts(which('OCKModel.slx'))),'CAD');
 
-wingFileName = 'wing1.sldcrv';
+wingFileName = 'wing1Orig.sldcrv';
 
-fileID = fopen(fullfile(basePath,wingFileName),'w');
+wing1 = load(wingFileName);
 
-[wingX,wingZ]=loadShapeFile(plant.wingShapeFileName);
+newFileName = 'wing1.sldcrv';
+
+fileID = fopen(newFileName,'w');
+
+% [wingX,wingZ]=load(plant.wingShapeFileName);
 
 % Scale to appropriate size
-wingX = wingX*plant.refLengthWing-plant.refLengthWing/2;
-wingZ = wingZ*plant.refLengthWing;
-wingY = (plant.wingSpan/2)*ones(size(wingX)); % Offset in y direction to start sweep in CAD
+scaleFactor = 0.015;
+
+wingX = wing1(:,1)*scaleFactor;
+
+wingY = wing1(:,2)*scaleFactor;
+
+wingZ = wing1(:,3)*scaleFactor;
 
 % Convert to in
-wingX = -39.3701*wingX; % Flip the x coordinate so that the leading edge is pointed towards +x dir
-wingY = 39.3701*wingY;
-wingZ = 39.3701*wingZ;
+
+% wingX = -39.3701*wingX; % Flip the x coordinate so that the leading edge is pointed towards +x dir
+% 
+% wingY = 39.3701*wingY;
+% 
+% wingZ = 39.3701*wingZ;
 
 % fileID = fopen('exp.txt','w');
-fprintf(fileID,'%.2fin %.2fin %.2fin\r\n',[wingX';wingY';wingZ']);
+
+fprintf(fileID,'%.4fm %.4fm %.4fm\r\n',[wingX';wingY';wingZ']);
+
 % fclose(fileID);
 
 fclose('all');
 
 %% Wing End 2 file
+
 basePath = fullfile(fileparts(fileparts(which('OCKModel.slx'))),'CAD');
 
-wingFileName = 'wing2.sldcrv';
+wingFileName = 'wing2Orig.sldcrv';
 
-fileID = fopen(fullfile(basePath,wingFileName),'w');
+wing2 = load(wingFileName);
 
-[wingX,wingZ] = loadShapeFile(plant.wingShapeFileName);
+newFileName = 'wing2.sldcrv';
+
+fileID = fopen(newFileName,'w');
 
 % Scale to appropriate size
-wingX = wingX*plant.refLengthWing-plant.refLengthWing/2;
-wingZ = wingZ*plant.refLengthWing;
-wingY = -(plant.wingSpan/2)*ones(size(wingX)); % Offset in y direction to start sweep in CAD
 
-% Convert to in
-wingX = -39.3701*wingX; % Flip the x coordinate so that the leading edge is pointed towards +x dir
-wingY = 39.3701*wingY;
-wingZ = 39.3701*wingZ;
+wingX = wing2(:,1)*scaleFactor;
+
+wingY = wing2(:,2)*scaleFactor;
+
+wingZ = wing2(:,3)*scaleFactor;
+
+% Convert to m
+
+wingX = 0.0254*wingX; % Flip the x coordinate so that the leading edge is pointed towards +x dir
+
+wingY = 0.0254*wingY;
+
+wingZ = 0.0254*wingZ;
 
 % fileID = fopen('exp.txt','w');
-fprintf(fileID,'%.2fin %.2fin %.2fin\r\n',[wingX';wingY';wingZ']);
+
+fprintf(fileID,'%.4fm %.4fm %.4fm\r\n',[wingX';wingY';wingZ']);
+
 % fclose(fileID);
 
 fclose('all');
 
 
 %% Rudder Tip File
+
 rudderTipScaleFactor = 0.75;
 
 basePath = fullfile(fileparts(fileparts(which('OCKModel.slx'))),'CAD');
 
-rudderFileName = 'rudderTip.sldcrv';
+rudderFileName = 'rudderTipOrig.sldcrv';
 
-fileID = fopen(fullfile(basePath,rudderFileName),'w');
+rudderTip = load(rudderFileName);
 
-[rudderX,rudderY] = loadShapeFile(plant.rudderShapeFileName);
+newFileName = 'rudderTip.sldcrv';
+
+fileID = fopen(newFileName,'w');
 
 % Flip and shift so that it goes in -x direction
-rudderX = -rudderX+1;
 
 % Scale to appropriate size
-rudderX = rudderTipScaleFactor*rudderX*plant.refLengthRudder;
-rudderY = rudderTipScaleFactor*rudderY*plant.refLengthRudder;
-rudderZ = zeros(size(rudderX))+plant.rudderSpan;
 
-% Move backwards
-rudderX = rudderX - plant.momentArm - rudderTipScaleFactor*plant.refLengthRudder/2;
+rudderXt = rudderTip(:,1)*scaleFactor;
+
+rudderYt = rudderTip(:,2)*scaleFactor;
+
+rudderZt = rudderTip(:,3)*scaleFactor;
+
+%Increase length
+
+rudderXt = rudderXt*2 - rudderXt(1) - .25;
+
 % Convert to in
-rudderX = 39.3701*rudderX;
-rudderY = 39.3701*rudderY;
-rudderZ = 39.3701*rudderZ;
+
+rudderXt = 0.0254*rudderXt;
+
+rudderYt = 0.0254*rudderYt;
+
+rudderZt = 0.0254*rudderZt;
 
 % fileID = fopen('exp.txt','w');
-fprintf(fileID,'%.2fin %.2fin %.2fin\r\n',[rudderX';rudderY';rudderZ']);
+
+fprintf(fileID,'%.6fm %.6fm %.6fm\r\n',[rudderXt';rudderYt';rudderZt']);
+
 % fclose(fileID);
 
 fclose('all');
 
 %% Rudder Base File
+
 rudderBaseScaleFactor = 1.75;
 
 basePath = fullfile(fileparts(fileparts(which('OCKModel.slx'))),'CAD');
 
-rudderFileName = 'rudderBase.sldcrv';
+rudderFileName = 'rudderBaseOrig.sldcrv';
 
-fileID = fopen(fullfile(basePath,rudderFileName),'w');
+rudderBase = load(rudderFileName);
 
-[rudderX,rudderY]=loadShapeFile(plant.rudderShapeFileName);
+newFileName = 'rudderBase.sldcrv';
+
+fileID = fopen(newFileName,'w');
 
 % Flip and shift so that it goes in -x direction
-rudderX = -rudderX+1;
-
 % Scale to appropriate size
-rudderX = rudderBaseScaleFactor*rudderX*plant.refLengthRudder;
-rudderY = rudderBaseScaleFactor*rudderY*plant.refLengthRudder;
-rudderZ = zeros(size(rudderX));
+
+rudderXb = rudderBase(:,1)*scaleFactor;
+
+rudderYb = rudderBase(:,2)*scaleFactor;
+
+rudderZb = rudderBase(:,3)*scaleFactor;
+
+%Increase length
+
+rudderXb = rudderXb*1.85 - rudderXb(1)*.85;
 
 % Move backwards
-rudderX = rudderX - plant.momentArm - rudderTipScaleFactor*plant.refLengthRudder/2;
-
 % Convert to in
-rudderX = 39.3701*rudderX;
-rudderY = 39.3701*rudderY;
-rudderZ = 39.3701*rudderZ;
+
+rudderXb = 0.0254*rudderXb;
+
+rudderYb = 0.0254*rudderYb;
+
+rudderZb = 0.0254*rudderZb;
 
 % fileID = fopen('exp.txt','w');
-fprintf(fileID,'%.2fin %.2fin %.2fin\r\n',[rudderX';rudderY';rudderZ']);
+
+fprintf(fileID,'%.6fm %.6fm %.6fm\r\n',[rudderXb';rudderYb';rudderZb']);
+
 % fclose(fileID);
 
 fclose('all');
 
-
 %% Stabilizer Tip 1
+
 basePath = fullfile(fileparts(fileparts(which('OCKModel.slx'))),'CAD');
 
-stabilizerFileName = 'stabilizerTip1.sldcrv';
+stabilizerFileName = 'stabilizerTip1Orig.sldcrv';
 
-fileID = fopen(fullfile(basePath,stabilizerFileName),'w');
+stabilizer = load(stabilizerFileName);
 
-[stabilizerX,stabilizerZ]=loadShapeFile(plant.stabilizerShapeFileName);
+newFileName = 'stabilizerTip1.sldcrv';
 
-stabilizerX = -stabilizerX+1;
+fileID = fopen(newFileName,'w');
 
 % Scale to appropriate size
-stabilizerX = stabilizerX*plant.refLengthStabilizer; % Flip the direction so it points forward in CAD
-stabilizerZ = stabilizerZ*plant.refLengthStabilizer;
-stabilizerY = zeros(size(stabilizerX))+plant.stabilizerSpan/2;
+
+stabilizerX1 = stabilizer(:,1)*scaleFactor;
+
+stabilizerY1 = stabilizer(:,2)*scaleFactor;
+
+stabilizerZ1 = stabilizer(:,3)*scaleFactor;
+
+%Double distance from zero and increase chord length
+
+stabilizerX1 = stabilizerX1*2 - stabilizerX1(1);
+
+stabilizerY1 = stabilizerY1*2;
 
 % Convert to in
-stabilizerX = 39.3701*stabilizerX;
-stabilizerY = 39.3701*stabilizerY+6;
-stabilizerZ = 39.3701*stabilizerZ;
+
+stabilizerX1 = 0.0254*stabilizerX1;
+
+stabilizerY1 = 0.0254*stabilizerY1;
+
+stabilizerZ1 = 0.0254*stabilizerZ1;
 
 % Move backwards
-stabilizerX = stabilizerX - plant.momentArm*39.3071+(plant.refLengthStabilizer/2)*39.3071;
 
 % fileID = fopen('exp.txt','w');
-fprintf(fileID,'%.2fin %.2fin %.2fin\r\n',[stabilizerX';stabilizerY';stabilizerZ']);
+
+fprintf(fileID,'%.6fm %.6fm %.6fm\r\n',[stabilizerX1';stabilizerY1';stabilizerZ1']);
 
 fclose('all');
 
 %% Stabilizer Tip 2
+
 basePath = fullfile(fileparts(fileparts(which('OCKModel.slx'))),'CAD');
 
-stabilizerFileName = 'stabilizerTip2.sldcrv';
+stabilizerFileName = 'stabilizerTip2Orig.sldcrv';
 
-fileID = fopen(fullfile(basePath,stabilizerFileName),'w');
+newFileName = 'stabilizerTip2.sldcrv';
 
-[stabilizerX,stabilizerZ]=loadShapeFile(plant.stabilizerShapeFileName);
+fileID = fopen(newFileName,'w');
+
+stabilizer = load(stabilizerFileName);
 
 % Scale to appropriate size
-stabilizerX = -stabilizerX*plant.refLengthStabilizer; % Flip the direction so it points forward in CAD
-stabilizerZ = stabilizerZ*plant.refLengthStabilizer;
-stabilizerY = zeros(size(stabilizerX))-plant.stabilizerSpan/2;
 
+stabilizerX2 = stabilizer(:,1)*scaleFactor;
+
+stabilizerY2 = stabilizer(:,2)*scaleFactor;
+
+stabilizerZ2 = stabilizer(:,3)*scaleFactor;
+
+%Double distance from zero and increase chord length
+
+stabilizerX2 = stabilizerX2*2 - stabilizerX2(1);
+
+stabilizerY2 = stabilizerY2*2;
 
 % Convert to in
-stabilizerX = 39.3701*stabilizerX;
-stabilizerY = 39.3701*stabilizerY-6;
-stabilizerZ = 39.3701*stabilizerZ;
+
+stabilizerX2 = 0.0254*stabilizerX2;
+
+stabilizerY2 = 0.0254*stabilizerY2;
+
+stabilizerZ2 = 0.0254*stabilizerZ2;
 
 % Move backwards
-stabilizerX = stabilizerX - plant.momentArm*39.3071+(plant.refLengthStabilizer/2)*39.3071;
 
 % fileID = fopen('exp.txt','w');
-fprintf(fileID,'%.2fin %.2fin %.2fin\r\n',[stabilizerX';stabilizerY';stabilizerZ']);
+
+fprintf(fileID,'%.6fm %.6fm %.6fm\r\n',[stabilizerX2';stabilizerY2';stabilizerZ2']);
 
 fclose('all');
-
-
